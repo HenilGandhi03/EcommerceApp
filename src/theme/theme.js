@@ -8,6 +8,10 @@ export const Theme = {
     ringBorder: 'rgba(212, 175, 55, 0.3)',
     logoBoxBg: '#D4AF37',      // THIS IS THE BOX COLOR (Pale Yellow)
   },
+  spacing: {
+    padding: 20,
+    headerCurve: 45, 
+  },
   text: {
     brandName: 'MCaffeine',
     tagline: 'PREMIUM SKINCARE',
