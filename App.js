@@ -14,9 +14,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
-        {/* <Stack.Screen name="MainTabs" component={MainTabs} />
-        <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} /> 
-        <Stack.Screen name="Checkout" component={CheckoutScreen} />  */}
+        <Stack.Screen name="MainTabs" component={MainTabs} />
+        <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+        <Stack.Screen name="Checkout" component={CheckoutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

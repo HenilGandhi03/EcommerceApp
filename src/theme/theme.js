@@ -15,4 +15,8 @@ export const defaultTheme = {
   fonts: {
     brand: 'System', // or your custom font
   },
+  text: {
+    brandName: 'mCaffeine',
+    tagline: 'Powered by Caffeine',
+  },
 };

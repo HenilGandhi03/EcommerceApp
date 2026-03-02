@@ -81,22 +81,11 @@
 
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
+import { defaultTheme } from '../theme/theme';
 
-export default function SplashScreen({ theme, onAnimationEnd }) {
-  // Fallback theme (prevents crash if theme is undefined)
-  const activeTheme = theme || {
-    colors: {
-      background: '#2C1810',
-      cup: '#D4604D',
-      steam: '#F5DEB3',
-      brand: '#F5DEB3',
-      tagline: '#D4604D',
-    },
-    text: {
-      brandName: 'mCaffeine',
-      tagline: 'Powered by Caffeine',
-    },
-  };
+export default function SplashScreen({ navigation, theme, onAnimationEnd }) {
+  // Use imported theme or fallback
+  const activeTheme = theme || defaultTheme;
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.3)).current;
@@ -115,12 +104,15 @@ export default function SplashScreen({ theme, onAnimationEnd }) {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Optional callback after animation
-      if (onAnimationEnd) {
-        setTimeout(() => {
+      // Navigate to MainTabs after animation
+      setTimeout(() => {
+        if (navigation) {
+          navigation.replace('MainTabs');
+        }
+        if (onAnimationEnd) {
           onAnimationEnd();
-        }, 800);
-      }
+        }
+      }, 800);
     });
   }, []);
 
