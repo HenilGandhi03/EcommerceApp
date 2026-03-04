@@ -7,7 +7,7 @@ import { useTheme } from "../theme";
 import HomeScreen from "../screens/Home/HomeScreen";
 import ProductScreen from "../screens/ProductScreen";
 import CartScreen from "../screens/Cart/CartScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
