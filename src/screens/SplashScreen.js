@@ -1,16 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Image, Dimensions } from 'react-native';
-import { Theme } from '../theme/theme';
+import { View, Text, StyleSheet, Animated, Image } from 'react-native';
+import { useTheme } from '../theme'; // Updated to use the modular hook
+import { Typography } from '../theme/typography'; // For central text strings
 
-const { width } = Dimensions.get('window');
-
-// The updated SplashScreen component that changes *only* the inside image to TronOs.
 export default function SplashScreen({ navigation }) {
+  const { colors, sizes } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
 
   useEffect(() => {
-    // Start the parallel animation for a smooth, premium entrance
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -24,65 +22,64 @@ export default function SplashScreen({ navigation }) {
       }),
     ]).start();
 
-    // Set a timer to navigate away from the splash screen
     const timer = setTimeout(() => {
-      navigation.replace('MainTabs'); // Replace with your next screen name
-    }, 3000); // 3-second display time
+      navigation.replace('MainTabs');
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [fadeAnim, scaleAnim, navigation]);
 
   return (
-    <View style={[styles.container, { backgroundColor: Theme.colors.background }]}>
-      <Animated.View 
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Animated.View
         style={[
-          styles.content, 
-          { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }
+          styles.content,
+          { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
         ]}
       >
-        {/* LOGO SECTION WITH RINGS - This structure is kept identical to MCaffeine's layout. */}
+        {/* LOGO SECTION WITH RINGS */}
         <View style={styles.logoContainer}>
-          <View style={styles.outerRing}>
-            <View style={styles.innerRing}>
-              {/* THE INSIDE IMAGE BOX: This is the primary point of change.
-                  The position and styling of this box are identical to the source image,
-                  but the *image content* is new. The source value in the Theme's assets
-                  must now point to the TronOs image. */}
-              <View style={[styles.logoBox, { backgroundColor: Theme.colors.logoBoxBg }]}>
-                <Image 
-                  source={Theme.assets.logo} // This asset reference is changed in Theme to point to TronOs.
-                  style={styles.logoImage} 
-                  resizeMode="contain" 
+          <View style={[styles.outerRing, { borderColor: colors.ringBorder }]}>
+            <View style={[styles.innerRing, { borderColor: colors.brandGold }]}>
+              <View
+                style={[styles.logoBox, { backgroundColor: colors.brandGold }]}
+              >
+                {/* Image source now pulled from central theme assets */}
+                <Image
+                  source={require('../assets/images/brand_image_2.png')}
+                  style={styles.logoImage}
+                  resizeMode="contain"
                 />
               </View>
             </View>
           </View>
         </View>
 
-        {/* The rest of the screen elements remain completely identical to the source image,
-            as the user specified only the inside image should be changed. The text content,
-            typography, color, size, and other details are all kept from the MCaffeine splash. */}
-
-        {/* BRAND TEXT SECTION: Unchanged MCaffeine name. */}
-        <Text style={[styles.brandText, { color: Theme.colors.brandGold }]}>
-          {Theme.text.brandName} {/* Remains 'MCaffeine' from the theme. */}
+        {/* BRAND TEXT SECTION - Using central typography strings */}
+        <Text style={[styles.brandText, { color: colors.brandGold }]}>
+          {Typography.strings.brandName}
         </Text>
 
-        {/* TAGLINE SECTION: Unchanged PREMIUM SKINCARE with lines. */}
+        {/* TAGLINE SECTION */}
         <View style={styles.taglineWrapper}>
-          <View style={[styles.line, { backgroundColor: Theme.colors.muted }]} />
-          <Text style={[styles.tagline, { color: Theme.colors.taglineGold }]}>
-            {Theme.text.tagline} {/* Remains 'PREMIUM SKINCARE' from the theme. */}
+          <View style={[styles.line, { backgroundColor: colors.muted }]} />
+          <Text style={[styles.tagline, { color: colors.brandGold }]}>
+            {Typography.strings.tagline}
           </Text>
-          <View style={[styles.line, { backgroundColor: Theme.colors.muted }]} />
+          <View style={[styles.line, { backgroundColor: colors.muted }]} />
         </View>
       </Animated.View>
 
-      {/* FOOTER SECTION: Unchanged LOADING ESSENTIALS with loading bar. */}
+      {/* FOOTER SECTION */}
       <View style={styles.footer}>
-        <View style={[styles.loadingBar, { backgroundColor: Theme.colors.ringBorder }]} />
-        <Text style={[styles.footerText, { color: Theme.colors.muted }]}>
-          {Theme.text.footer} {/* Remains 'LOADING ESSENTIALS' from the theme. */}
+        <View
+          style={[
+            styles.loadingBar,
+            { backgroundColor: colors.ringBorder, width: sizes.width * 0.3 },
+          ]}
+        />
+        <Text style={[styles.footerText, { color: colors.muted }]}>
+          {Typography.strings.footer}
         </Text>
       </View>
     </View>
@@ -90,24 +87,14 @@ export default function SplashScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    alignItems: 'center',
-    width: '100%',
-  },
-  logoContainer: {
-    marginBottom: 40,
-  },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  content: { alignItems: 'center', width: '100%' },
+  logoContainer: { marginBottom: 40 },
   outerRing: {
     width: 200,
     height: 200,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: Theme.colors.ringBorder,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -116,13 +103,10 @@ const styles = StyleSheet.create({
     height: 170,
     borderRadius: 85,
     borderWidth: 1.5,
-    borderColor: Theme.colors.brandGold,
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.6,
   },
-  // The logo box maintains its position and background color,
-  // only its image content changes.
   logoBox: {
     width: 110,
     height: 110,
@@ -133,45 +117,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
   },
-  logoImage: {
-    width: '150%',
-    height: '90%',
-  },
-  // Typography styling remains completely unchanged.
+  logoImage: { width: '150%', height: '90%' },
   brandText: {
     fontSize: 48,
     fontFamily: 'serif',
     fontWeight: '600',
     letterSpacing: 1,
   },
-  taglineWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  line: {
-    height: 1,
-    width: 40,
-    marginHorizontal: 15,
-  },
-  tagline: {
-    fontSize: 12,
-    letterSpacing: 4,
-    fontWeight: '300',
-  },
-  // Footer styling is identical.
-  footer: {
-    position: 'absolute',
-    bottom: 50,
-    alignItems: 'center',
-  },
-  loadingBar: {
-    width: width * 0.3,
-    height: 1,
-    marginBottom: 10,
-  },
-  footerText: {
-    fontSize: 10,
-    letterSpacing: 2,
-  },
+  taglineWrapper: { flexDirection: 'row', alignItems: 'center', marginTop: 15 },
+  line: { height: 1, width: 40, marginHorizontal: 15 },
+  tagline: { fontSize: 12, letterSpacing: 4, fontWeight: '300' },
+  footer: { position: 'absolute', bottom: 50, alignItems: 'center' },
+  loadingBar: { height: 1, marginBottom: 10 },
+  footerText: { fontSize: 10, letterSpacing: 2 },
 });
