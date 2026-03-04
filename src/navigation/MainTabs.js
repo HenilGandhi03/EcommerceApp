@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"; // ✅
 import { useTheme } from "../theme";
 
 import HomeScreen from "../screens/Home/HomeScreen";
-import ProductScreen from "../screens/ProductScreen";
+import ProductScreen from "../screens/Product/ProductScreen";
 import CartScreen from "../screens/Cart/CartScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 
