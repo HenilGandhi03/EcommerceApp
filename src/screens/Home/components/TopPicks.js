@@ -9,13 +9,18 @@ import {
 } from 'react-native';
 import { useTheme } from '../../../theme/index';
 import { Typography } from '../../../theme/typography';
+import { useCart } from '../../../context/CartContext';
 
-// src/screens/Home/components/TopPicks.js
-export const TopPicks = ({ data, navigation }) => { // Destructure navigation
+export const TopPicks = ({ data, navigation }) => {
   const { colors, sizes } = useTheme();
+  // Destructure cart along with addToCart
+  const { cart, addToCart } = useCart();
   const [favorites, setFavorites] = useState({});
 
   const toggleFav = id => setFavorites(p => ({ ...p, [id]: !p[id] }));
+
+  // Helper to check if item is already in cart
+  const isInCart = id => cart.some(cartItem => cartItem.id === id);
 
   return (
     <View style={styles.container}>
@@ -23,8 +28,9 @@ export const TopPicks = ({ data, navigation }) => { // Destructure navigation
         <Text style={[styles.title, { color: colors.text }]}>
           {Typography.strings.topPicksTitle}
         </Text>
-        {/* Navigate to the Shop tab */}
-        <TouchableOpacity onPress={() => navigation.navigate('MainTabs', { screen: 'Shop' })}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MainTabs', { screen: 'Shop' })}
+        >
           <Text style={{ color: colors.textMuted }}>See All</Text>
         </TouchableOpacity>
       </View>
@@ -33,38 +39,65 @@ export const TopPicks = ({ data, navigation }) => { // Destructure navigation
         data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingLeft: sizes.padding, paddingBottom: sizes.padding }}
-        renderItem={({ item }) => (
-          <TouchableOpacity 
-            // Navigate to Product Details and pass the item data
-            onPress={() => navigation.navigate('ProductDetails', { product: item })}
-            activeOpacity={0.9}
-            style={[
-              styles.card,
-              {
-                width: sizes.productCardWidth,
-                backgroundColor: colors.surface,
-              },
-            ]}
-          >
-            <View style={[styles.imgContainer, { height: sizes.productImgHeight }]}>
-              <Image source={{ uri: item.img }} style={styles.img} />
-            </View>
-            <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
-            <Text style={styles.sub}>{item.sub}</Text>
-            <View style={styles.footer}>
-              <Text style={[styles.price, { color: colors.text }]}>{item.price}</Text>
-              <View style={styles.actions}>
-                <TouchableOpacity onPress={() => toggleFav(item.id)}>
-                  <Text style={{ fontSize: 18 }}>{favorites[item.id] ? '❤️' : '🤍'}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.addBtn}>
-                  <Text style={styles.addText}>+</Text>
-                </TouchableOpacity>
+        contentContainerStyle={{
+          paddingLeft: sizes.padding,
+          paddingBottom: sizes.padding,
+        }}
+        renderItem={({ item }) => {
+          const added = isInCart(item.id); // Check status for this specific item
+
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ProductDetails', { product: item })
+              }
+              activeOpacity={0.9}
+              style={[
+                styles.card,
+                {
+                  width: sizes.productCardWidth,
+                  backgroundColor: colors.surface,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.imgContainer,
+                  { height: sizes.productImgHeight },
+                ]}
+              >
+                <Image source={{ uri: item.img }} style={styles.img} />
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
+              <Text style={[styles.name, { color: colors.text }]}>
+                {item.name}
+              </Text>
+              <Text style={styles.sub}>{item.sub}</Text>
+              <View style={styles.footer}>
+                <Text style={[styles.price, { color: colors.text }]}>
+                  ${item.price}
+                </Text>
+                <View style={styles.actions}>
+                  <TouchableOpacity onPress={() => toggleFav(item.id)}>
+                    <Text style={{ fontSize: 18 }}>
+                      {favorites[item.id] ? '❤️' : '🤍'}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* UI changes based on 'added' status */}
+                  <TouchableOpacity
+                    style={[
+                      styles.addBtn,
+                      { backgroundColor: added ? colors.brandGold : '#000' },
+                    ]}
+                    onPress={() => addToCart(item)}
+                  >
+                    <Text style={styles.addText}>{added ? '✓' : '+'}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
@@ -102,7 +135,6 @@ const styles = StyleSheet.create({
   price: { fontWeight: 'bold' },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   addBtn: {
-    backgroundColor: '#000',
     width: 28,
     height: 28,
     borderRadius: 14,

@@ -5,12 +5,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./src/screens/SplashScreen";
 import MainTabs from "./src/navigation/MainTabs";
 import ProductDetailsScreen from "./src/screens/ProductDetailsScreen"
-import CheckoutScreen from "./src/screens/CheckoutScreen";
-
+import CheckoutScreen from "./src/screens/Cart/CheckoutScreen";
+import { CartProvider } from "./src/context/CartContext";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
+    <CartProvider>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
@@ -19,5 +20,6 @@ export default function App() {
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    </CartProvider>
   );
 }
