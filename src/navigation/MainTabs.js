@@ -8,6 +8,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ProductScreen from "../screens/Product/ProductScreen";
 import CartScreen from "../screens/Cart/CartScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
+import FavouriteScreen from "../screens/Favourites/FavouriteScreen"
 
 const Tab = createBottomTabNavigator();
 
@@ -76,7 +77,7 @@ export default function MainTabs() {
 
       <Tab.Screen
         name="Favorites"
-        component={ProductScreen}
+        component={FavouriteScreen}
         options={{
           tabBarIcon: () => (
             <View
