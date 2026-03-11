@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Text,
+  Alert,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../theme';
 import { ProfileHeader } from './components/ProfileHeader';
 import { UpgradeBanner } from './components/UpgradeBanner';
@@ -8,10 +16,33 @@ import { MenuSection } from './components/MenuSection';
 export default function ProfileScreen({ navigation }) {
   const { colors } = useTheme();
 
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('userEmail');
+            await AsyncStorage.removeItem('userName');
+
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          } catch (error) {
+            Alert.alert('Error', 'Failed to logout. Please try again.');
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-
         {/* Stats now live inside ProfileHeader */}
         <ProfileHeader
           name="Sophia Mocha"
@@ -30,27 +61,44 @@ export default function ProfileScreen({ navigation }) {
           {/* Account Group */}
           <View style={[styles.menuCard, { backgroundColor: colors.surface }]}>
             <MenuSection title="Order History" icon="📜" />
-            <View style={[styles.divider, { backgroundColor: colors.background }]} />
+            <View
+              style={[styles.divider, { backgroundColor: colors.background }]}
+            />
             <MenuSection title="Saved Addresses" icon="📍" />
-            <View style={[styles.divider, { backgroundColor: colors.background }]} />
+            <View
+              style={[styles.divider, { backgroundColor: colors.background }]}
+            />
             <MenuSection
               title="Wishlist"
               icon="🤍"
-              onPress={() => navigation.navigate('MainTabs', { screen: 'Favorites' })}
+              onPress={() =>
+                navigation.navigate('MainTabs', { screen: 'Favorites' })
+              }
             />
           </View>
 
           {/* Preferences Group */}
-          <View style={[styles.menuCard, { backgroundColor: colors.surface, marginTop: 16 }]}>
+          <View
+            style={[
+              styles.menuCard,
+              { backgroundColor: colors.surface, marginTop: 16 },
+            ]}
+          >
             <MenuSection title="Notifications" icon="🔔" badge="ON" />
-            <View style={[styles.divider, { backgroundColor: colors.background }]} />
+            <View
+              style={[styles.divider, { backgroundColor: colors.background }]}
+            />
             <MenuSection title="Payment Methods" icon="💳" />
-            <View style={[styles.divider, { backgroundColor: colors.background }]} />
+            <View
+              style={[styles.divider, { backgroundColor: colors.background }]}
+            />
             <MenuSection title="Help & Support" icon="❓" />
           </View>
 
-          <TouchableOpacity style={styles.logoutBtn}>
-            <Text style={[styles.logoutText, { color: colors.textMuted }]}>Log Out</Text>
+          <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+            <Text style={[styles.logoutText, { color: colors.textMuted }]}>
+              Log Out
+            </Text>
           </TouchableOpacity>
         </View>
 
