@@ -13,5 +13,6 @@ export const Typography = {
     clubTitle: 'Join the Bean Club',
     clubDesc: 'Earn points on every order and get exclusive rewards.',
     learnMore: 'Learn More',
+    footer: 'Loading Essentials...'
   }
 };

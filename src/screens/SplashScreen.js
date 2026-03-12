@@ -1,11 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTheme } from '../theme'; // Updated to use the modular hook
+import { darkColors } from '../theme/colors'; // Import dark colors directly
+import { Sizes } from '../theme/sizes'; // Import sizes directly
 import { Typography } from '../theme/typography'; // For central text strings
 
 export default function SplashScreen({ navigation }) {
-  const { colors, sizes } = useTheme();
+  // Always use dark colors for splash screen
+  const colors = darkColors;
+  const sizes = Sizes;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
 
@@ -59,7 +62,7 @@ export default function SplashScreen({ navigation }) {
       >
         {/* LOGO SECTION WITH RINGS */}
         <View style={styles.logoContainer}>
-          <View style={[styles.outerRing, { borderColor: colors.ringBorder }]}>
+          <View style={[styles.outerRing, { borderColor: colors.surface }]}>
             <View style={[styles.innerRing, { borderColor: colors.brandGold }]}>
               <View
                 style={[styles.logoBox, { backgroundColor: colors.brandGold }]}
@@ -82,11 +85,11 @@ export default function SplashScreen({ navigation }) {
 
         {/* TAGLINE SECTION */}
         <View style={styles.taglineWrapper}>
-          <View style={[styles.line, { backgroundColor: colors.muted }]} />
+          <View style={[styles.line, { backgroundColor: colors.textMuted }]} />
           <Text style={[styles.tagline, { color: colors.brandGold }]}>
             {Typography.strings.tagline}
           </Text>
-          <View style={[styles.line, { backgroundColor: colors.muted }]} />
+          <View style={[styles.line, { backgroundColor: colors.textMuted }]} />
         </View>
       </Animated.View>
 
@@ -95,10 +98,10 @@ export default function SplashScreen({ navigation }) {
         <View
           style={[
             styles.loadingBar,
-            { backgroundColor: colors.ringBorder, width: sizes.width * 0.3 },
+            { backgroundColor: colors.brandGold, width: sizes.width * 0.3 },
           ]}
         />
-        <Text style={[styles.footerText, { color: colors.muted }]}>
+        <Text style={[styles.footerText, { color: colors.textMuted }]}>
           {Typography.strings.footer}
         </Text>
       </View>
