@@ -78,7 +78,7 @@ export default function SplashScreen({ navigation }) {
         <View
           style={[
             styles.loadingBar,
-            { backgroundColor: colors.surface, width: sizes.width * 0.3 },
+            { backgroundColor: colors.brandGold, width: sizes.width * 0.3 },
           ]}
         />
         <Text style={[styles.footerText, { color: colors.textMuted }]}>
