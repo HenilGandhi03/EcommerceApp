@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../theme'; // Updated to use the modular hook
 import { Typography } from '../theme/typography'; // For central text strings
 
@@ -22,11 +23,30 @@ export default function SplashScreen({ navigation }) {
       }),
     ]).start();
 
-    const timer = setTimeout(() => {
-      navigation.replace('Login');
-    }, 3000);
+    const checkAuthStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
 
-    return () => clearTimeout(timer);
+        const timer = setTimeout(() => {
+          if (token) {
+            navigation.replace('MainTabs');
+          } else {
+            navigation.replace('Login');
+          }
+        }, 3000);
+
+        return () => clearTimeout(timer);
+      } catch (error) {
+        console.log('Error checking auth status:', error);
+        const timer = setTimeout(() => {
+          navigation.replace('Login');
+        }, 3000);
+
+        return () => clearTimeout(timer);
+      }
+    };
+
+    checkAuthStatus();
   }, [fadeAnim, scaleAnim, navigation]);
 
   return (
