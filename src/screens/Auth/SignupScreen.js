@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -77,9 +78,16 @@ const SignupScreen = ({ navigation }) => {
         >
           {/* Header */}
           <View style={styles.header}>
-            <View style={styles.logoCircle}>
-              <Text style={styles.logoText}>M</Text>
+            <View style={styles.innerRing}>
+              <View style={styles.logoBox}>
+                <Image
+                  source={require('../../assets/images/brand_image_2.png')}
+                  style={styles.logoImage}
+                  resizeMode="contain"
+                />
+              </View>
             </View>
+
             <Text style={styles.brandName}>MCAFFEINE</Text>
             <Text style={styles.subtitle}>SIGN UP</Text>
           </View>
@@ -181,31 +189,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 50,
   },
-  logoCircle: {
+
+  innerRing: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    opacity: 0.8,
   },
-  logoText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#D4AF37',
-    fontStyle: 'italic',
+  logoBox: {
+    width: 55,
+    height: 55,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#D4AF37',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  logoImage: {
+    width: '150%',
+    height: '90%',
   },
   brandName: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFFFFF',
     letterSpacing: 2,
+    marginTop: 20,
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#8B8B8B',
     fontWeight: '400',
     letterSpacing: 1,
