@@ -58,12 +58,17 @@ const LoginScreen = ({ navigation }) => {
         >
           {/* Logo and Brand */}
           <View style={styles.logoContainer}>
-            <View style={styles.logoCircle}>
-              <View style={styles.profilePlaceholder}>
-                <Icon name="user" size={30} color="#8B4513" />
+            <View style={styles.innerRing}>
+              <View style={styles.logoBox}>
+                <Image
+                  source={require('../../assets/images/brand_image_2.png')}
+                  style={styles.logoImage}
+                  resizeMode="contain"
+                />
               </View>
             </View>
-            <Text style={styles.brandName}>MCaffeine</Text>
+
+            <Text style={styles.brandName}>MCAFFEINE</Text>
             <Text style={styles.tagline}>Premium Coffee Skincare</Text>
           </View>
 
@@ -137,37 +142,49 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 60,
+    marginBottom: 50,
   },
-  logoCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
+
+  innerRing: {
+    width: 127.5, // 85% of outer ring
+    height: 127.5,
+    borderRadius: 63.75,
+    borderWidth: 1.5,
     borderColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    opacity: 0.6,
   },
-  profilePlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#E8D5C4',
+  logoBox: {
+    width: 82.5, // 75% of inner ring
+    height: 82.5,
+    backgroundColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+  },
+  logoImage: {
+    width: '150%',
+    height: '90%',
   },
   brandName: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#D4AF37',
-    marginBottom: 8,
+    fontSize: 36,
+    fontFamily: 'serif',
+    fontWeight: '600',
     letterSpacing: 1,
+    color: '#D4AF37',
+    marginTop: 20,
   },
   tagline: {
-    fontSize: 16,
-    color: '#8B8B8B',
-    fontWeight: '400',
+    fontSize: 12,
+    letterSpacing: 4,
+    fontWeight: '300',
+    color: '#D4AF37',
+    marginTop: 5,
   },
   formContainer: {
     flex: 1,
