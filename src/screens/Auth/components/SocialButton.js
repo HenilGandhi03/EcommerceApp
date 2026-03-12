@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 const SocialButton = ({ iconName, onPress, style }) => (
   <TouchableOpacity style={[styles.socialButton, style]} onPress={onPress}>
     {iconName === 'google' ? (
-      <View style={styles.googleIcon}>
-        <Icon name="search" size={16} color="#2B1F17" />
-      </View>
+      <AntDesignIcon name="google" size={20} color="#D4AF37" />
     ) : iconName === 'apple' ? (
-      <Icon name="smartphone" size={20} color="#D4AF37" />
+      <AntDesignIcon name="apple1" size={20} color="#D4AF37" />
+    ) : iconName === 'facebook' ? (
+      <FontAwesomeIcon name="facebook" size={20} color="#D4AF37" />
     ) : (
-      <Icon name={iconName} size={20} color="#D4AF37" />
+      <AntDesignIcon name={iconName} size={20} color="#D4AF37" />
     )}
   </TouchableOpacity>
 );
@@ -23,14 +24,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: '#D4AF37',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  googleIcon: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#D4AF37',
     justifyContent: 'center',
     alignItems: 'center',
   },

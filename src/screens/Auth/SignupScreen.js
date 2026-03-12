@@ -19,6 +19,7 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
@@ -108,6 +109,17 @@ const SignupScreen = ({ navigation }) => {
               secureTextEntry={!showPassword}
               showToggle={true}
               onToggleSecure={() => setShowPassword(!showPassword)}
+            />
+
+            <CustomInput
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirmPassword}
+              showToggle={true}
+              onToggleSecure={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
             />
 
             <TouchableOpacity
