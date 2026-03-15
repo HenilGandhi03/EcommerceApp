@@ -74,7 +74,7 @@ export const TopPicks = ({ data, navigation }) => {
               <Text style={styles.sub}>{item.sub}</Text>
               <View style={styles.footer}>
                 <Text style={[styles.price, { color: colors.text }]}>
-                  ${item.price}
+                  ₹{item.price}
                 </Text>
                 <View style={styles.actions}>
                   <TouchableOpacity onPress={() => toggleFav(item.id)}>
