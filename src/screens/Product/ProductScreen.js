@@ -8,8 +8,10 @@ import { ProductGrid } from './components/ProductGrid';
 
 import { getAllProducts } from '../../service/All_Product_Service';
 
-export default function ProductScreen({ navigation }) {
+export default function ProductScreen({ navigation, route }) {
   const { colors } = useTheme();
+
+  const category = route?.params?.category;
 
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
@@ -23,18 +25,25 @@ export default function ProductScreen({ navigation }) {
       const data = await getAllProducts();
       setProducts(data);
     } catch (error) {
-      console.log('Product loading error', error);
+      console.log("Product loading error", error);
     }
   };
 
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
+  const filteredProducts = category
+    ? products.filter((p) =>
+        p.tags?.toLowerCase().includes(category.toLowerCase())
+      )
+    : products;
+
+  const finalProducts = filteredProducts.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      
       <ProductHeader
-        title="All Products"
+        title={category || "All Products"}
         navigation={navigation}
         searchValue={search}
         onSearchChange={setSearch}
@@ -44,12 +53,13 @@ export default function ProductScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
-        <ProductFilters search={search} setSearch={setSearch} />
+        <ProductFilters />
 
-        <ProductGrid products={filtered} navigation={navigation} />
+        <ProductGrid products={finalProducts} navigation={navigation} />
 
         <View style={{ height: 100 }} />
       </ScrollView>
+
     </View>
   );
 }
