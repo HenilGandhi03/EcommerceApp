@@ -14,7 +14,7 @@ export const ProductCard = ({ item, navigation }) => {
     >
       {/* Image area */}
       <View style={[styles.imageWrapper, { backgroundColor: item.bgColor || '#F3EBE0' }]}>
-        <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: item.img }} style={styles.image} resizeMode="cover" />
 
         {/* Tag */}
         {item.tag && (
@@ -44,11 +44,11 @@ export const ProductCard = ({ item, navigation }) => {
         </View>
 
         <Text style={[styles.productTitle, { color: colors.text }]} numberOfLines={2}>
-          {item.title}
+          {item.name}
         </Text>
 
         <View style={styles.priceRow}>
-          <Text style={[styles.price, { color: colors.text }]}>{item.price}</Text>
+          <Text style={[styles.price, { color: colors.text }]}>₹{item.price}</Text>
           {item.oldPrice && (
             <Text style={[styles.oldPrice, { color: colors.textMuted }]}>{item.oldPrice}</Text>
           )}
