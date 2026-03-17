@@ -7,26 +7,18 @@ import { HomeHeader } from '../Home/components/HomeHeader';
 import { ExclusiveOffers } from '../Home/components/ExclusiveOffers';
 import { TopPicks } from '../Home/components/TopPicks';
 import { JoinClub } from '../Home/components/JoinClub';
+import { useProducts } from '../../context/ProductContext';
 
 import { categories, offers } from '../../constants/data';
 import { getTopProducts } from '../../service/Top_Pick_Service';
 
 export default function HomeScreen({ navigation }) {
   const { colors } = useTheme();
-  const [topProducts, setTopProducts] = useState([]);
+  const { topProducts, loading } = useProducts();
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const loadProducts = async () => {
-    try {
-      const products = await getTopProducts();
-      setTopProducts(products);
-    } catch (err) {
-      console.log("Error loading products", err);
-    }
-  };
+  if (loading) {
+    return null; // // implement loading error state
+  }
 
   return (
     <SafeAreaView

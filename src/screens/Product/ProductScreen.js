@@ -7,27 +7,17 @@ import { ProductFilters } from './components/ProductFilters';
 import { ProductGrid } from './components/ProductGrid';
 
 import { getAllProducts } from '../../service/All_Product_Service';
+import { useProducts } from '../../context/ProductContext';
 
 export default function ProductScreen({ navigation, route }) {
   const { colors } = useTheme();
 
   const category = route?.params?.category;
 
-  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const loadProducts = async () => {
-    try {
-      const data = await getAllProducts();
-      setProducts(data);
-    } catch (error) {
-      console.log("Product loading error", error);
-    }
-  };
+  const { allProducts, loading } = useProducts();
+  const products = allProducts;
+  if (loading) return null;// implement loading error state
 
   const filteredProducts = category
     ? products.filter((p) =>

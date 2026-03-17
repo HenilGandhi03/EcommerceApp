@@ -1,11 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { darkColors } from '../theme/colors'; // Import dark colors directly
-import { Sizes } from '../theme/sizes'; // Import sizes directly
-import { Typography } from '../theme/typography'; // For central text strings
+import { darkColors } from '../theme/colors'; 
+import { Sizes } from '../theme/sizes'; 
+import { Typography } from '../theme/typography'; 
+import { useProducts } from '../context/ProductContext';
 
 export default function SplashScreen({ navigation }) {
+  const { loadInitialData } = useProducts();
   // Always use dark colors for splash screen
   const colors = darkColors;
   const sizes = Sizes;
@@ -28,17 +30,15 @@ export default function SplashScreen({ navigation }) {
 
     const checkAuthStatus = async () => {
       try {
+        await loadInitialData();
         const token = await AsyncStorage.getItem('userToken');
 
-        const timer = setTimeout(() => {
-          if (token) {
-            navigation.replace('MainTabs');
-          } else {
-            navigation.replace('Login');
-          }
-        }, 3000);
+        if (token) {
+          navigation.replace('MainTabs');
+        } else {
+          navigation.replace('Login');
+        }
 
-        return () => clearTimeout(timer);
       } catch (error) {
         console.log('Error checking auth status:', error);
         const timer = setTimeout(() => {

@@ -8,11 +8,15 @@ import MainTabs from './src/navigation/MainTabs';
 import ProductDetailsScreen from './src/screens/Product/ProductDetailsScreen';
 import CheckoutScreen from './src/screens/Cart/CheckoutScreen';
 import { CartProvider } from './src/context/CartContext';
+import { ProductProvider } from './src/context/ProductContext';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <CartProvider>
+    <ProductProvider>
+
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Splash" component={SplashScreen} />
@@ -26,6 +30,7 @@ export default function App() {
           <Stack.Screen name="Checkout" component={CheckoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+    </ProductProvider>
     </CartProvider>
   );
 }
