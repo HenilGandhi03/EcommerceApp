@@ -64,7 +64,8 @@ export default function ProfileScreen({ navigation }) {
             <View
               style={[styles.divider, { backgroundColor: colors.background }]}
             />
-            <MenuSection title="Saved Addresses" icon="📍" />
+            <MenuSection title="Saved Addresses" icon="📍"   onPress={() => navigation.navigate('SavedAddresses')}  // ← add this
+/>
             <View
               style={[styles.divider, { backgroundColor: colors.background }]}
             />
