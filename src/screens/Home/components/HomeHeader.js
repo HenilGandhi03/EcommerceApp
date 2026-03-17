@@ -9,37 +9,30 @@ import {
   Image,
 } from 'react-native';
 import { useTheme } from '../../../theme/index';
+import { ScreenHeader } from '../../../components/ScreenHeader';
 
 export const HomeHeader = ({ categories, navigation }) => {
   const { colors, sizes } = useTheme();
 
-  return (
-    <View
-      style={[
-        styles.header,
-        {
-          backgroundColor: colors.headerBg,
-          borderBottomLeftRadius: sizes.headerCurve,
-          borderBottomRightRadius: sizes.headerCurve,
-        },
-      ]}
-    >
-      {/* User Row */}
-      <View style={styles.userRow}>
-        <View style={styles.userInfo}>
-          <View style={styles.avatar} />
-          <View>
-            <Text style={{ color: colors.textMuted }}>Good Morning</Text>
-            <Text style={styles.userName}>Hello, Coffee Lover 👋</Text>
-          </View>
+  // Passed as customNavRow — replaces the default back|title|right row
+  const userRow = (
+    <View style={styles.userRow}>
+      <View style={styles.userInfo}>
+        <View style={styles.avatar} />
+        <View>
+          <Text style={{ color: colors.textMuted }}>Good Morning</Text>
+          <Text style={styles.userName}>Hello, Coffee Lover 👋</Text>
         </View>
-
-        <TouchableOpacity style={styles.iconCircle}>
-          <Text style={[styles.whiteIcon, { fontSize: 24 }]}>🔔</Text>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity style={styles.iconCircle}>
+        <Text style={{ color: 'white', fontSize: 24 }}>🔔</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
-      {/* Search */}
+  return (
+    <ScreenHeader customNavRow={userRow}>
+      {/* Search — white bar variant for Home */}
       <View style={styles.searchRow}>
         <View style={styles.searchBar}>
           <Text style={{ fontSize: 20 }}>🔍</Text>
@@ -55,17 +48,13 @@ export const HomeHeader = ({ categories, navigation }) => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[styles.catScroll, { paddingHorizontal: 20 }]}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
       >
-        {categories.map((cat) => (
+        {categories.map(cat => (
           <TouchableOpacity
             key={cat.label}
             style={styles.catItem}
-            onPress={() =>
-              navigation.navigate("Shop", {
-                category: cat.label,
-              })
-            }
+            onPress={() => navigation.navigate('Shop', { category: cat.label })}
           >
             <View
               style={[
@@ -75,33 +64,26 @@ export const HomeHeader = ({ categories, navigation }) => {
             >
               <Image source={{ uri: cat.img }} style={styles.img} />
             </View>
-
             <Text style={styles.catLabel}>{cat.label}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </View>
+    </ScreenHeader>
   );
 };
 
+// Only HomeHeader-specific styles remain
 const styles = StyleSheet.create({
-  header: { paddingBottom: 25 },
-
   userRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
     alignItems: 'center',
   },
-
   userInfo: { flexDirection: 'row', gap: 10, alignItems: 'center' },
-
   avatar: { width: 45, height: 45, borderRadius: 25, backgroundColor: '#CCC' },
-
   userName: { color: 'white', fontWeight: 'bold', fontSize: 18 },
-
   searchRow: { paddingHorizontal: 20, marginBottom: 20 },
-
   searchBar: {
     backgroundColor: 'white',
     borderRadius: 25,
@@ -110,25 +92,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
   },
-
   input: { flex: 1, marginLeft: 10, fontSize: 16 },
-
-  catScroll: { paddingLeft: 5 },
-
   catItem: { marginRight: 15, alignItems: 'center' },
-
-  circle: {
-    borderRadius: 30,
-    overflow: 'hidden',
-    backgroundColor: '#EADBC8',
-  },
-
+  circle: { borderRadius: 30, overflow: 'hidden', backgroundColor: '#EADBC8' },
   img: { width: '100%', height: '100%' },
-
   catLabel: { color: 'white', fontSize: 12, marginTop: 8, fontWeight: '500' },
-
-  whiteIcon: { color: 'white' },
-
   iconCircle: {
     width: 45,
     height: 45,
