@@ -10,55 +10,113 @@ import {
 } from 'react-native';
 import { useTheme } from '../../theme';
 import { useCart } from '../../context/CartContext';
+import { useFavorites } from '../../context/FavoriteContext';
 
 const { width } = Dimensions.get('window');
+
 const FEATURE_ICONS = {
-  "100% Vegan": "🍃",
-  "Paraben Free": "🚫",
-  "Cruelty Free": "🐾",
-  "Derma Tested": "🧪",
+  '100% Vegan': '🍃',
+  'Paraben Free': '🚫',
+  'Cruelty Free': '🐾',
+  'Derma Tested': '🧪',
 };
+
 export default function ProductDetailsScreen({ route, navigation }) {
   const { product } = route.params;
 
   const { colors, sizes } = useTheme();
-  const { addToCart } = useCart();
+  const { cart, addToCart } = useCart();
 
   const [qty, setQty] = useState(1);
-  const features = product.category?.split(",").map((f) => f.trim()) || [];        
+  const [added, setAdded] = useState(false);
+  const { toggleFavorite, isFavorite } = useFavorites();
+
+  const fav = isFavorite(product.id);
+  const features = product.category?.split(',').map(f => f.trim()) || [];
+
+  const cartItem = cart.find(item => item.id === product.id);
+  const alreadyInCartQty = cartItem?.quantity || 0;
+
+  const handleAdd = () => {
+    addToCart({ ...product, quantity: qty });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1200);
+  };
+
+  const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* PRODUCT IMAGE */}
+        {/* IMAGE */}
         <View style={styles.imageContainer}>
           <Image source={{ uri: product.img }} style={styles.image} />
 
-          {/* HEADER BUTTONS */}
+          {/* HEADER */}
           <View style={styles.headerOverlay}>
+            {/* BACK */}
             <TouchableOpacity
-              style={[
-                styles.iconCircle,
-                { backgroundColor: colors.surface + 'DD' },
-              ]}
+              style={[styles.iconCircle, { backgroundColor: colors.headerBg }]}
               onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
             >
-              <Text style={{ fontSize: 18 }}>←</Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: '#fff',
+                  marginTop: -6,
+                  fontWeight: 'bold',
+                }}
+              >
+                ←
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[
-                styles.iconCircle,
-                { backgroundColor: colors.surface + 'DD' },
-              ]}
-              onPress={() => navigation.navigate('Cart')}
-            >
-              <Text style={{ fontSize: 18 }}>🛍️</Text>
-            </TouchableOpacity>
+            {/* RIGHT ICONS */}
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              {/* ❤️ FAVORITE */}
+              <TouchableOpacity
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: colors.headerBg },
+                ]}
+                onPress={() => toggleFavorite(product)}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: fav ? 'red' : '#fff',
+                  }}
+                >
+                  {fav ? '❤️' : '♡'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* 🛍️ CART */}
+              <View>
+                <TouchableOpacity
+                  style={[
+                    styles.iconCircle,
+                    { backgroundColor: colors.headerBg },
+                  ]}
+                  onPress={() => navigation.navigate('Cart')}
+                  activeOpacity={0.7}
+                >
+                  <Text style={{ fontSize: 18, color: '#fff' }}>🛍️</Text>
+                </TouchableOpacity>
+
+                {/* BADGE */}
+                {totalCartItems > 0 && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{totalCartItems}</Text>
+                  </View>
+                )}
+              </View>
+            </View>
           </View>
         </View>
 
-        {/* PRODUCT DETAILS */}
+        {/* DETAILS */}
         <View
           style={[
             styles.details,
@@ -68,15 +126,13 @@ export default function ProductDetailsScreen({ route, navigation }) {
             },
           ]}
         >
-          {/* CATEGORY */}
           <Text style={[styles.category, { color: colors.accent }]}>
             {product.tags
               ?.split(',')
               .map(tag => tag.trim().toUpperCase())
-              .join(' • ')}{' '}
+              .join(' • ')}
           </Text>
 
-          {/* TITLE + PRICE */}
           <View style={styles.titleRow}>
             <Text style={[styles.title, { color: colors.text }]}>
               {product.name}
@@ -87,23 +143,20 @@ export default function ProductDetailsScreen({ route, navigation }) {
             </Text>
           </View>
 
-          {/* SUBTITLE */}
           <Text style={styles.subtitle}>
             {product.sub || 'Hyaluronic Acid • Pro-Vitamin B5'}
           </Text>
 
-{/* FEATURES */}
           <View style={styles.featuresRow}>
             {features.map((feature, index) => (
               <FeatureIcon
                 key={index}
                 label={feature.toUpperCase()}
-                icon={FEATURE_ICONS[feature] || "⭐"}
+                icon={FEATURE_ICONS[feature] || '⭐'}
               />
             ))}
           </View>
 
-          {/* DESCRIPTION */}
           <Text style={[styles.sectionHeader, { color: colors.text }]}>
             Product Description
           </Text>
@@ -120,7 +173,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
         </View>
       </ScrollView>
 
-      {/* BOTTOM CART BAR */}
+      {/* BOTTOM BAR */}
       <View
         style={[
           styles.bottomBar,
@@ -130,6 +183,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
           },
         ]}
       >
+        {/* QTY */}
         <View
           style={[styles.qtyContainer, { backgroundColor: colors.background }]}
         >
@@ -150,19 +204,31 @@ export default function ProductDetailsScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
 
+        {/* ADD BUTTON */}
         <TouchableOpacity
-          style={[styles.addBtn, { backgroundColor: colors.headerBg }]}
-          onPress={() => addToCart({ ...product, quantity: qty })}
+          style={[
+            styles.addBtn,
+            {
+              backgroundColor:
+                alreadyInCartQty > 0 ? colors.brandGold : colors.headerBg,
+            },
+          ]}
+          onPress={handleAdd}
         >
-          <Text style={styles.addBtnText}>Add to Cart</Text>
+          <Text style={styles.addBtnText}>
+            {added
+              ? 'Added ✅'
+              : alreadyInCartQty > 0
+              ? `Added (${alreadyInCartQty})`
+              : 'Add to Cart'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-/* FEATURE ICON COMPONENT */
-
+/* FEATURE ICON */
 const FeatureIcon = ({ label, icon }) => {
   const { colors } = useTheme();
 
@@ -177,13 +243,10 @@ const FeatureIcon = ({ label, icon }) => {
 };
 
 /* STYLES */
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
 
-  imageContainer: {
-    height: 420,
-  },
+  imageContainer: { height: 420 },
 
   image: {
     width: width,
@@ -206,6 +269,22 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  badge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+
+  badgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 
   details: {
