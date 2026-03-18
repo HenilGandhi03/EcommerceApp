@@ -4,6 +4,7 @@ import { useTheme } from '../../../theme';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { AddressCard } from './components/AddressCard';
 import { AddNewAddressButton } from './components/AddNewAddressButton';
+import { useAddress } from '../../../context/AddressContext';
 
 // Mock data — replace with AsyncStorage / API call later
 const MOCK_ADDRESSES = [
@@ -29,28 +30,25 @@ const MOCK_ADDRESSES = [
 
 export default function SavedAddressesScreen({ navigation }) {
   const { colors } = useTheme();
-  const [addresses, setAddresses] = useState(MOCK_ADDRESSES);
+  const { addresses, deleteAddress } = useAddress();
 
-  const handleDelete = (id) => {
-    Alert.alert('Delete Address', 'Are you sure you want to remove this address?', [
+  const handleDelete = id => {
+    Alert.alert('Delete Address', 'Are you sure?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
         style: 'destructive',
-        onPress: () => setAddresses(prev => prev.filter(a => a.id !== id)),
+        onPress: () => deleteAddress(id), // ✅ GLOBAL DELETE
       },
     ]);
   };
 
-  const handleEdit = (address) => {
-    // navigate to edit form — wire up later
-    // navigation.navigate('EditAddress', { address });
-    Alert.alert('Edit', `Edit ${address.type} address — coming soon`);
+  const handleEdit = address => {
+    navigation.navigate('AddressForm', { address }); // ← passes existing data
   };
 
   const handleAddNew = () => {
-    // navigation.navigate('AddAddress');
-    Alert.alert('Add', 'Add address form — coming soon');
+    navigation.navigate('AddressForm'); // ← navigate to new address form
   };
 
   return (
