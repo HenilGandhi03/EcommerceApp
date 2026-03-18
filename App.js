@@ -10,8 +10,10 @@ import CheckoutScreen from './src/screens/Cart/CheckoutScreen';
 import { CartProvider } from './src/context/CartContext';
 import { ProductProvider } from './src/context/ProductContext';
 import { FavoriteProvider } from './src/context/FavoriteContext';
+import { AddressProvider } from './src/context/AddressContext';
 import CartScreen from './src/screens/Cart/CartScreen';
 import SavedAddressesScreen from './src/screens/Profile/Address_Screen/SavedAddressesScreen';
+import AddressFormScreen from './src/screens/Profile/Address_Screen/AddressForm/AddressFormScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,7 @@ export default function App() {
     <CartProvider>
       <ProductProvider>
         <FavoriteProvider>
+          <AddressProvider>
           <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="Splash" component={SplashScreen} />
@@ -33,12 +36,19 @@ export default function App() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
+                name="AddressForm"
+                component={AddressFormScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
                 name="ProductDetails"
                 component={ProductDetailsScreen}
               />
               <Stack.Screen name="Checkout" component={CheckoutScreen} />
             </Stack.Navigator>
           </NavigationContainer>
+          </AddressProvider>
         </FavoriteProvider>
       </ProductProvider>
     </CartProvider>
