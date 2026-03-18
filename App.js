@@ -11,6 +11,7 @@ import { CartProvider } from './src/context/CartContext';
 import { ProductProvider } from './src/context/ProductContext';
 import { FavoriteProvider } from './src/context/FavoriteContext';
 import CartScreen from './src/screens/Cart/CartScreen';
+import SavedAddressesScreen from './src/screens/Profile/Address_Screen/SavedAddressesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ export default function App() {
               <Stack.Screen name="Signup" component={SignupScreen} />
               <Stack.Screen name="MainTabs" component={MainTabs} />
               <Stack.Screen name="Cart" component={CartScreen} />
+              <Stack.Screen
+                name="SavedAddresses"
+                component={SavedAddressesScreen}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen
                 name="ProductDetails"
                 component={ProductDetailsScreen}

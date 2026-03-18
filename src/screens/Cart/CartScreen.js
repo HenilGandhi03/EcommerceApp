@@ -1,12 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import { useTheme } from '../../theme';
 import { useCart } from '../../context/CartContext';
 import { CartItem } from './components/CartItem';
 import { OrderSummary } from './components/OrderSummary';
 import { CheckoutFooter } from './components/CheckoutFooter';
 import { PromoCode } from './components/PromoCode';
+import { ScreenHeader } from '../../components/ScreenHeader';
 
 export default function CartScreen({ navigation }) {
   const { colors } = useTheme();
@@ -29,30 +36,14 @@ export default function CartScreen({ navigation }) {
   const total = subtotal + tax;
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-      edges={['top']}
-    >
-      {/* HEADER SECTION */}
-      <View style={[styles.header, { backgroundColor: colors.headerBg }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backBtn}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
-          <View style={styles.backArrow} />
-        </TouchableOpacity>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
 
-        <Text style={styles.headerTitle}>SHOPPING CART</Text>
-
-        <TouchableOpacity style={[styles.backBtn, { alignItems: 'flex-end' }]}>
-          <View style={styles.menuContainer}>
-            <View style={styles.menuDot} />
-            <View style={styles.menuDot} />
-            <View style={styles.menuDot} />
-          </View>
-        </TouchableOpacity>
-      </View>
+      <ScreenHeader
+        title="Shopping Cart"
+        onBack={() => navigation.goBack()}
+        rightIcon="⋮"
+        bottomRadius={0} // Cart header has no curve
+      />
 
       <FlatList
         data={cart}
@@ -78,12 +69,24 @@ export default function CartScreen({ navigation }) {
         ListEmptyComponent={
           <View style={{ alignItems: 'center', marginTop: 100 }}>
             <Text style={{ fontSize: 40, marginBottom: 10 }}>🛒</Text>
-            <Text style={{ color: '#888', fontSize: 24 }}>Your cart is empty</Text>
-            <TouchableOpacity 
-              onPress={() => navigation.navigate('MainTabs', { screen: 'Shop' })}
+            <Text style={{ color: '#888', fontSize: 24 }}>
+              Your cart is empty
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('MainTabs', { screen: 'Shop' })
+              }
               style={{ marginTop: 20, padding: 10 }}
             >
-              <Text style={{ color: colors.brandGold, fontWeight: 'bold',fontSize: 16 }}>Go Shopping</Text>
+              <Text
+                style={{
+                  color: colors.brandGold,
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}
+              >
+                Go Shopping
+              </Text>
             </TouchableOpacity>
           </View>
         }
@@ -97,7 +100,7 @@ export default function CartScreen({ navigation }) {
           onCheckout={() => navigation.navigate('Checkout', { total })}
         />
       )}
-    </SafeAreaView>
+      </View>
   );
 }
 
